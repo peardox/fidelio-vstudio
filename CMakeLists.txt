@@ -6,6 +6,8 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(FAMILY rp2040)
+
 # Initialise pico_sdk from installed location
 # (note this can come from environment, CMake cache etc)
 
@@ -18,9 +20,7 @@ endif()
 set(sdkVersion 2.0.0)
 set(toolchainVersion 13_2_Rel1)
 set(picotoolVersion 2.0.0)
-set(FAMILY rp2040)
 include(${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
-#include(/mnt/c/Users/simon/.pico-sdk/cmake/pico-vscode.cmake)
 # ====================================================================================
 set(PICO_BOARD pico CACHE STRING "Board type")
 
@@ -34,7 +34,6 @@ project(fidelio C CXX ASM)
 pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
-set(WOLFSSL_USER_SETTINGS 1)
 set(SOURCE_FILES 
         src/fidelio.c 
         src/rand.c 
@@ -63,13 +62,12 @@ set(SOURCE_FILES
  
     
         )
-add_executable(fidelio ${SOURCE_FILES}) # src/fidelio.c)# src/rand.c src/cert.c src/u2f.c src/usb_descriptors.c)
+
+add_executable(fidelio ${SOURCE_FILES})
 
 pico_set_program_name(fidelio "Fidelio")
 pico_set_program_version(fidelio "0.1")
 
-# add_dependencies(fidelio ${CMAKE_CURRENT_SOURCE_DIR}/src/u2f.c)
-       
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(fidelio 0)
 pico_enable_stdio_usb(fidelio 0)
@@ -89,13 +87,11 @@ target_link_libraries(fidelio
 target_include_directories(fidelio PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src
   ${CMAKE_CURRENT_SOURCE_DIR}/lib/wolfssl
-  #  ${CMAKE_CURRENT_LIST_DIR}/.. # for our common lwipopts or any other standard includes, if required
-  # $ENV{PICO_SDK_PATH}/lib/tinyusb
-#  $ENV{PICO_SDK_PATH}/lib/tinyusb/src  
 )
 
 target_compile_definitions(fidelio PUBLIC WOLFSSL_USER_SETTINGS)
 
 pico_add_extra_outputs(fidelio)
-message("End of CMakeLists.txt")
+
+message("End of CMakeLists.txt.....")
 
