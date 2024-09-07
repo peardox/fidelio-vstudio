@@ -18,8 +18,9 @@ endif()
 set(sdkVersion 2.0.0)
 set(toolchainVersion 13_2_Rel1)
 set(picotoolVersion 2.0.0)
-# set(FAMILY rp2040)
+set(FAMILY rp2040)
 include(${USERHOME}/.pico-sdk/cmake/pico-vscode.cmake)
+#include(/mnt/c/Users/simon/.pico-sdk/cmake/pico-vscode.cmake)
 # ====================================================================================
 set(PICO_BOARD pico CACHE STRING "Board type")
 
@@ -33,7 +34,35 @@ project(fidelio C CXX ASM)
 pico_sdk_init()
 
 # Add executable. Default name is the project name, version 0.1
-set(SOURCE_FILES src/fidelio.c src/rand.c src/cert.c src/u2f.c src/usb_descriptors.c)
+set(WOLFSSL_USER_SETTINGS 1)
+set(SOURCE_FILES 
+        src/fidelio.c 
+        src/rand.c 
+        src/cert.c 
+        src/u2f.c 
+        src/usb_descriptors.c
+        
+        lib/wolfssl/wolfcrypt/src/asn.c
+        lib/wolfssl/wolfcrypt/src/wc_port.c
+        lib/wolfssl/wolfcrypt/src/wolfmath.c
+        lib/wolfssl/wolfcrypt/src/hash.c
+        lib/wolfssl/wolfcrypt/src/memory.c
+        lib/wolfssl/wolfcrypt/src/misc.c
+        lib/wolfssl/wolfcrypt/src/ecc.c
+        lib/wolfssl/wolfcrypt/src/hmac.c
+        lib/wolfssl/wolfcrypt/src/coding.c
+        lib/wolfssl/wolfcrypt/src/random.c
+        lib/wolfssl/wolfcrypt/src/sha256.c
+        lib/wolfssl/wolfcrypt/src/sha512.c
+        lib/wolfssl/wolfcrypt/src/ge_low_mem.c
+        lib/wolfssl/wolfcrypt/src/fe_low_mem.c
+        lib/wolfssl/wolfcrypt/src/ge_operations.c
+        lib/wolfssl/wolfcrypt/src/sp_int.c
+        lib/wolfssl/wolfcrypt/src/sp_armthumb.c
+        lib/wolfssl/wolfcrypt/src/sp_c32.c
+ 
+    
+        )
 add_executable(fidelio ${SOURCE_FILES}) # src/fidelio.c)# src/rand.c src/cert.c src/u2f.c src/usb_descriptors.c)
 
 pico_set_program_name(fidelio "Fidelio")
@@ -65,5 +94,8 @@ target_include_directories(fidelio PRIVATE
 #  $ENV{PICO_SDK_PATH}/lib/tinyusb/src  
 )
 
+target_compile_definitions(fidelio PUBLIC WOLFSSL_USER_SETTINGS)
+
 pico_add_extra_outputs(fidelio)
+message("End of CMakeLists.txt")
 
