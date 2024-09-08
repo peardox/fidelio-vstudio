@@ -156,6 +156,10 @@ struct __attribute__((packed)) u2f_raw_hdr {
     uint8_t len[3];
 };
 
+#ifdef WOOLPACK
+    #message "Compiled in debug mode"
+#endif
+
 #define U2F_REGISTER_INS 0x01
 #define U2F_AUTHENTICATE_INS 0x02
 #define U2F_VERSION_INS 0x03
@@ -167,13 +171,13 @@ struct __attribute__((packed)) u2f_raw_hdr {
 #define CTAP_AUTHDATA_EXT_DATA		0x80
 
 /* CTAPHID command opcodes. */
-#define CTAP_CMD_PING			0x01
-#define CTAP_CMD_MSG			0x03
-#define CTAP_CMD_LOCK			0x04
-#define CTAP_CMD_INIT			0x06
-#define CTAP_CMD_WINK			0x08
-#define CTAP_CMD_CBOR			0x10
-#define CTAP_CMD_CANCEL			0x11
+#define CTAP_CMD_PING			0x01    // AKA U2FHID_PING
+#define CTAP_CMD_MSG			0x03    // AKA U2FHID_MSG
+#define CTAP_CMD_LOCK			0x04    // AKA U2FHID_LOCK
+#define CTAP_CMD_INIT			0x06    // AKA U2FHID_INIT
+#define CTAP_CMD_WINK			0x08    // AKA U2FHID_WINK
+#define CTAP_CMD_CBOR			0x10    // AKA CTAPHID_CBOR
+#define CTAP_CMD_CANCEL			0x11    // AKA CTAPHID_CANCEL
 #define CTAP_KEEPALIVE			0x3b
 #define CTAP_FRAME_INIT			0x80
 
@@ -560,6 +564,16 @@ static uint16_t parse_u2f_raw(void)
 {
     uint16_t ret;
     switch (U2F_Message.cmd) {
+        case CTAP_CMD_PING:
+            return EWRONGDATA;
+        case CTAP_CMD_LOCK:
+            return EWRONGDATA;
+        case CTAP_CMD_WINK:
+            return EWRONGDATA;
+        case CTAP_CMD_CBOR:
+            return EWRONGDATA;
+        case CTAP_CMD_CANCEL:
+            return EWRONGDATA;
         case CTAP_CMD_INIT:
             ctap_init_reply();
             return ENOERR;

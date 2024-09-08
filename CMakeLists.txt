@@ -90,6 +90,7 @@ target_include_directories(fidelio PRIVATE
 )
 
 target_compile_definitions(fidelio PUBLIC WOLFSSL_USER_SETTINGS)
+target_compile_definitions(fidelio PUBLIC USE_BOOTSEL_BUTTON)
 
 pico_add_extra_outputs(fidelio)
 
